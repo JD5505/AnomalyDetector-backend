@@ -8,8 +8,6 @@ wheels/
 __init__.py
 .env
 test.py
-scaler.pkl
-gru_autoencoder_model.pth
 uv.lock
 # Virtual environments
 .venv
