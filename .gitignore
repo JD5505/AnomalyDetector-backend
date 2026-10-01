@@ -13,3 +13,4 @@ gru_autoencoder_model.pth
 # Virtual environments
 .venv
 .vscode
+uv.lock
