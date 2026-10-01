@@ -1,0 +1,15 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+__init__.py
+.env
+test.py
+scaler.pkl
+gru_autoencoder_model.pth
+# Virtual environments
+.venv
+.vscode
