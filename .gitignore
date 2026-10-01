@@ -10,7 +10,7 @@ __init__.py
 test.py
 scaler.pkl
 gru_autoencoder_model.pth
+uv.lock
 # Virtual environments
 .venv
 .vscode
-uv.lock
