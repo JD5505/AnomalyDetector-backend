@@ -12,6 +12,7 @@ class Registrations():
         WHERE valid_upto <= NOW()
         """
         )
+        cursor.connection.commit()
 
     @staticmethod
     def register_user(email : str, password : str, role: str,  cursor) -> bool:

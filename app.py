@@ -2,9 +2,10 @@ from fastapi import FastAPI, Depends, HTTPException, BackgroundTasks
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.responses import JSONResponse
 from db.connection import get_db
-from Schema.session_validation import RegisterRequest, VerifyOTPRequest, VerifyLogin
+from Schema.session_validation import RegisterRequest, VerifyOTPRequest, VerifyLogin, EnterNewPassword
 from Schema.location_data import LocationSequence
 from auth.registration import Registrations
+from auth.forgot_pass import check_password, send_email, check_otp, enter_data
 from auth.login import verify_password
 from auth.generate_token import create_access_token
 from Operations.calc import preprocess
@@ -135,6 +136,35 @@ def verify_login(data: VerifyLogin, cursor = Depends(get_db)):
         token = create_access_token(data)
 
         return JSONResponse(status_code = 200, content = {'token': token, 'verified': True})
+
+@app.post("/forgot_password")
+def get_password(data: VerifyLogin, cursor = Depends(get_db)):
+    email = data.email
+    password = data.password
+    ans = check_password(email, password, cursor)
+    if ans == True:
+        return JSONResponse(status_code = 200, content={'message': "Your password is correct"})
+    else:
+        send_email(email, cursor)
+        return JSONResponse(status_code = 200, content={"message": "Wrong password, enter otp to create new password"})
+
+@app.post("/forgot_password/enter_otp")
+def get_otp(data:VerifyOTPRequest, cursor = Depends(get_db)):
+    email = data.email
+    otp = data.otp
+    if check_otp(email, otp, cursor) == True:
+        return JSONResponse(status_code = 200, content={'message': "Enter a new password"})
+    else:
+        return JSONResponse(status_code = 200, content={'message': "Wrong otp"})
+
+@app.post("/forgot_password/enter_new_password")
+def enter_password(data: EnterNewPassword, cursor = Depends(get_db)):
+    email = data.email
+    password = data.password
+    if enter_data(email, password, cursor) == True:
+        return JSONResponse(status_code=200, content={'message': "Password Reset Successfully"})
+    else:
+        return JSONResponse(status_code=200, content={'message': "Unknown Error Occured"})
 
 @app.get("/profile")
 def get_profile(current_user = Depends(get_current_user)):

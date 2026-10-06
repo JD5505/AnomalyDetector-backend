@@ -18,3 +18,7 @@ class LocationRequest(BaseModel):
     latitude: float
     longitude: float
     timestamp: datetime
+
+class EnterNewPassword(BaseModel):
+    email: EmailStr
+    password : str
